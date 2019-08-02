@@ -1,0 +1,74 @@
+[
+  {
+    "model": "api.feature",
+    "pk": 1,
+    "fields": {
+      "name": "zudello",
+      "description": "Automate Entry of invoices & Purchases Orders"
+    }
+  },
+  {
+    "model": "api.feature",
+    "pk": 2,
+    "fields": {
+      "name": "magento",
+      "description": "Automate Magento inventory control"
+    }
+  },
+  {
+    "model": "api.feature",
+    "pk": 3,
+    "fields": {
+      "name": "shopify",
+      "description": "Automate Shopify inventory control"
+    }
+  },
+  {
+    "model": "api.feature",
+    "pk": 4,
+    "fields": {
+      "name": "amazon",
+      "description": "Automate Amazon inventory control"
+    }
+  },
+  {
+    "model": "api.feature",
+    "pk": 5,
+    "fields": {
+      "name": "woocommerce",
+      "description": "Automate WooCommerce inventory control"
+    }
+  },
+  {
+    "model": "api.feature",
+    "pk": 6,
+    "fields": {
+      "name": "xero",
+      "description": "Sync invoices & orders to Xero"
+    }
+  },
+  {
+    "model": "api.feature",
+    "pk": 7,
+    "fields": {
+      "name": "quickbooks",
+      "description": "Sync invoices & orders to Quickbooks"
+    }
+  },
+  {
+    "model": "api.feature",
+    "pk": 8,
+    "fields": {
+      "name": "fulfillmentamazon",
+      "description": "Manage stock levels across FBA locations"
+    }
+  },
+  {
+    "model": "api.feature",
+    "pk": 9,
+    "fields": {
+      "name": "zapier",
+      "description": "Connect TradeGecko to 1000+ apps"
+    }
+  }
+]

@@ -1,0 +1,8 @@
+<ng-select [items]="customers"
+  bindLabel="email"
+  bindValue="id"
+  [(ngModel)]="selectedCustomerID"
+  (ngModelChange)="selectCustomer()"
+  placeholder="Search Customers">
+
+</ng-select>

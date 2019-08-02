@@ -1,0 +1,10 @@
+@import '../../../vendor/libs/ngx-sweetalert2/ngx-sweetalert2.scss';
+
+.clients-wrapper {
+  width: 100%;
+}
+.thumb-custom {
+  width: 40px!important;
+  height: 40px!important;
+  object-fit: cover;
+}

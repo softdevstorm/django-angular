@@ -1,0 +1,197 @@
+<h4 class="font-weight-bold py-3 mb-4">
+  General Settings
+</h4>
+<div class="card overflow-hidden pb-5" style="min-height: 75%">
+  <div class="row no-gutters row-bordered row-border-light h-100">
+    <div class="col-md-3 pt-0">
+      <div class="list-group list-group-flush account-settings-links">
+        <button type="button" class="list-group-item list-group-item-action overview" [ngClass]="{active: curTab === 'overview'}" (click)="curTab='overview'">Company Overview</button>
+        <button type="button" class="list-group-item list-group-item-action team_members" [ngClass]="{active: curTab === 'team_members'}" (click)="curTab='team_members'">Team Members</button>
+        <button type="button" class="list-group-item list-group-item-action features" [ngClass]="{active: curTab === 'installed_features'}" (click)="curTab='installed_features'">Installed Feature</button>
+      </div>
+    </div>
+    <div class="col-md-9" *ngIf="curTab === 'overview'">
+      <div class="card-body media align-items-center">
+        <img [src]="company.avatar ? baseUrl + company.avatar: 'assets/img/avatars/avatar_placeholder.png'" alt="" class="d-block ui-w-80">
+        <!-- <img [src]="baseUrl + company.avatar || 'assets/img/avatars/avatar_placeholder.png'" alt="" class="d-block ui-w-80"> -->
+        <div class="media-body ml-4">
+            <input id="imageInput" type="file" accept="image/jpg, image/jpg, image/gif, image/png" (change)="onFileUpload($event)" style="display: none;">
+            <button id="upload_btn" type="button" class="btn btn-outline-primary">Upload new photo</button> &nbsp;
+          <button type="button" class="btn btn-default md-btn-flat">Reset</button>
+          <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
+        </div>
+      </div>
+      <hr class="border-light m-0">
+
+      <div class="card-body">
+        <div class="form-group">
+          <label class="form-label">Company Name</label>
+          <input [(ngModel)]="company.name" type="text" class="form-control" [readOnly]="!editable" value="{{company.name}}" (input)="onChange()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Website</label>
+          <input [(ngModel)]="company.website" type="text" class="form-control"[readOnly]="!editable" value="{{company.website}}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input [(ngModel)]="company.email" type="text" class="form-control mb-1" [readOnly]="!editable" value="{{company.email}}" (change)="onChange()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input [(ngModel)]="company.phone" type="text" class="form-control mb-1" [readOnly]="!editable" value="{{company.phone}}">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9" *ngIf="curTab === 'team_members'">
+      <div class="row m-0">
+        <div class="col-xl-4 col-lg-5 col-md-6 mt-3 member-item" *ngFor="let member of teamMembers">
+        <div class="card">
+          <ng-container *ngIf="member.id == user.id; else show_delete_btn">
+            <div class="delete-member"></div>
+          </ng-container>
+          <ng-template #show_delete_btn>
+            <div class="delete-member">
+              <a href="javascript:void(0)" type="button" data-id="{{member.id}}" class="btn btn-danger btn-danger btn-xs icon-btn md-btn-flat" 
+                      (click)="delete(deleteModal, member.id, { windowClass: 'modal-default modal-lg animate' })" ngbTooltip="Delete">
+                <span class="ion ion-md-close d-block"></span>
+              </a>
+            </div>
+          </ng-template>
+          <div class="card-header">
+            <div class="member-photo text-center">
+              <img [src]="member.avatar || 'assets/img/avatars/avatar_placeholder.png'" class="rounded-circle img-responsive" alt="avatar">
+            </div>
+            <ng-container *ngIf="member.first_name; else no_name">
+              <div class="member-name text-center">{{member.first_name + " " + member.last_name}}</div>
+            </ng-container>
+            <ng-template #no_name>
+                <div class="member-name text-center no-name"></div>
+            </ng-template>
+            <div class="member-contact text-center text-muted">Privacy contacts</div>
+          </div>
+          <div class="card-body py-1 px-2">
+            <div class="member-row-div mb-1">
+              <div class="member-row-icon"><i class="ion ion-ios-mail"></i> </div>
+              <div class="member-row-info">{{member.email}}</div>
+            </div>
+            <div class="member-row-div mb-1">
+              <div class="member-row-icon"><i class="ion ion-ios-call"></i> </div>
+              <div class="member-row-info">{{member.phone}}</div>
+            </div>
+            <div class="member-row-div mb-1">
+              <div class="member-row-icon"><i class="ion ion-md-phone-portrait"></i> </div>
+              <div class="member-row-info text-muted">add mobile number</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- add new member -->
+      <div class="col-xl-4 col-lg-5 col-md-6 mt-3 member-item" (click)="openAddMemberModal(addMemberModal, { centered: true, windowClass: 'modal-default modal-sm animate' })">
+        <div class="card">
+          <div class="card-header border-0">
+            <div class="add-member-photo text-center">
+              <img src='assets/img/avatars/add_member.png' class="rounded-circle img-responsive" alt="avatar">
+            </div>
+            <div class="member-name text-center mt-1">Add a new Team Member</div>
+            <div class="member-contact text-center text-muted"></div>
+            <div class="member-name text-center no-name"></div>
+          </div>
+          <div class="card-body py-1 px-2">
+            <div class="member-row-div mb-1">
+              <div class="member-row-icon"></div>
+              <div class="member-row-info"></div>
+            </div>
+            <div class="member-row-div mb-1">
+              <div class="member-row-icon"></div>
+              <div class="member-row-info"></div>
+            </div>
+            <div class="member-row-div mb-1">
+              <div class="member-row-icon"></div>
+              <div class="member-row-info text-muted"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="col-xl-4 col-lg-5 col-md-6 mt-3 member-item" id="delete_confirm_modal" (click)="openDeleteMemberModal(deletedMemberModal, { centered: true, windowClass: 'modal-default modal-sm animate' })" style="display: none;">
+    </div>
+
+    <div class="col-md-9" *ngIf="curTab === 'installed_features'">
+      <!-- <div class="row m-0">
+
+        <div class="col-xl-4 col-md-6">
+          <div class="card-body pb-2">
+            <div class="card">
+              <div class="card-header">
+                <img src="assets/img/avatars/shopify.png" class="img-responsive w-100">
+              </div>
+              <div class="card-body">
+                <div class="text-muted">Automate Shopify inventory control</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6">
+          <div class="card-body pb-2">
+            <div class="card">
+              <div class="card-header">
+                <img src="assets/img/avatars/shopify.png" class="img-responsive w-100">
+              </div>
+              <div class="card-body">
+                <div class="text-muted">Automate Shopify inventory control</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6">
+          <div class="card-body pb-2">
+            <div class="card">
+              <div class="card-header">
+                <img src="assets/img/avatars/shopify.png" class="img-responsive w-100">
+              </div>
+              <div class="card-body">
+                <div class="text-muted">Automate Shopify inventory control</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<div class="text-right mt-3">
+  <button type="button" class="btn btn-primary" *ngIf="curTab === 'overview'" (click)="onEdit()">{{editable ? 'Save changes' : 'Edit'}}</button>&nbsp;
+  <button type="button" class="btn btn-default"  *ngIf="curTab === 'overview'" (click)="onCancelEdit()">Cancel</button>
+</div>
+<!-- Modal template -->
+<ng-template #addMemberModal let-c="close" let-d="dismiss">
+  <app-add-new-member
+    (closeForm)="close(c)"
+    (addMember)="inviteMember($event, c)"
+  >
+  </app-add-new-member>
+</ng-template>
+
+<ng-template #deleteModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Delete user</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="dateOfBirth">Do you really want to delete this user?</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" style="float: right; margin-left: 5px" (click)="submit()">Delete</button>
+    <button type="button" class="btn btn-default" style="float: right" (click)="closeModal()">close</button>
+  </div>
+</ng-template>

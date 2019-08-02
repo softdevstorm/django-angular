@@ -1,0 +1,42 @@
+.feature-items {
+  @media (min-width: 1200px) {
+    margin-left: 8.33333333%!important;
+  }
+}
+.feature-item {
+  .card-header {
+    overflow: hidden;
+  }
+  .card-body {
+    min-height: 110px;
+    display: flex;
+    display: -ms-flex;
+    display: -webkit-flex;
+    flex-direction: column;
+
+    div:first-of-type {
+      flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+    }
+  }
+}
+.feature-item-img {
+  height: 100px;
+  max-width: 90%;
+}
+
+.feature-add-button-temp {
+  position: absolute;
+  margin-top: -55px;
+  margin-left: 323px;
+}
+
+.feature-add-button {
+  display: none;
+}
+
+.text-muted.mb-1 {
+  font-weight: 100;
+  font-size: 14px;
+}

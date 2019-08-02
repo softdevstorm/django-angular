@@ -1,0 +1,290 @@
+<h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
+  <div>Orders</div>
+  <a routerLink="/store/orders/create" class="btn btn-primary btn-round d-block">
+    <span class="ion ion-md-add"></span>
+    Create Order
+  </a>
+</h4>
+<!--&lt;!&ndash; Filters &ndash;&gt;-->
+<!--<div class="ui-bordered px-4 pt-4 mb-4">-->
+  <!--<div class="form-row">-->
+    <!--&lt;!&ndash;<div class="col-md mb-4">&ndash;&gt;-->
+      <!--&lt;!&ndash;<label class="form-label pb-1">Sales <span class="text-muted font-weight-normal ml-2">{{filterSales[0]}} - {{filterSales[1]}}</span></label>&ndash;&gt;-->
+      <!--&lt;!&ndash;<nouislider&ndash;&gt;-->
+        <!--&lt;!&ndash;[connect]="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;[config]="filterSalesOptions"&ndash;&gt;-->
+        <!--&lt;!&ndash;[(ngModel)]="filterSales"&ndash;&gt;-->
+        <!--&lt;!&ndash;class="product-list-slider my-3 mx-2">&ndash;&gt;-->
+      <!--&lt;!&ndash;</nouislider>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--&lt;!&ndash;<div class="col-md mb-4">&ndash;&gt;-->
+      <!--&lt;!&ndash;<label class="form-label pb-1">Price <span class="text-muted font-weight-normal ml-2">{{formatPrice(filterPrice[0], true)}} - {{formatPrice(filterPrice[1], true)}}</span></label>&ndash;&gt;-->
+      <!--&lt;!&ndash;<nouislider&ndash;&gt;-->
+        <!--&lt;!&ndash;[connect]="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;[config]="filterPriceOptions"&ndash;&gt;-->
+        <!--&lt;!&ndash;[(ngModel)]="filterPrice"&ndash;&gt;-->
+        <!--&lt;!&ndash;class="product-list-slider my-3 mx-2">&ndash;&gt;-->
+      <!--&lt;!&ndash;</nouislider>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--<div class="col-md mb-4">-->
+      <!--<label class="form-label">Status</label>-->
+      <!--<select class="custom-select" [(ngModel)]="filterStatus">-->
+        <!--<option *ngFor="let status of ['Any', 'Published', 'Out of stock', 'Pending', 'Hidden']">{{status}}</option>-->
+      <!--</select>-->
+    <!--</div>-->
+    <!--<div class="col-md col-xl-2 mb-4">-->
+      <!--<label class="form-label d-none d-md-block">&nbsp;</label>-->
+      <!--<button type="button" class="btn btn-secondary btn-block">Show</button>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; / Filters &ndash;&gt;-->
+
+<div class="card">
+
+  <!-- Table controls -->
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        Per page: &nbsp;
+        <select
+          [(ngModel)]="perPage"
+          (change)="update()"
+          class="custom-select custom-select-sm d-inline-block w-auto">
+          <option *ngFor="let limit of [10, 20, 30, 40, 50]">{{limit}}</option>
+        </select>
+      </div>
+      <div class="col">
+        <input type="text"
+          [(ngModel)]="filterVal"
+          (input)="currentPage = 1; update()"
+          class="form-control form-control-sm d-inline-block w-auto float-sm-right"
+          id="searchbox"
+          placeholder="Search...">
+      </div>
+    </div>
+
+  </div>
+  <!-- / Table controls -->
+
+  <!-- Table -->
+  <hr class="border-light m-0">
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered card-table ">
+      <thead>
+        <tr>
+          <th class="text-nowrap cursor-pointer " (click)="setSort('order')">
+            Order ID <i class="ion text-muted ml-2" *ngIf="sortBy=='order'" [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+          </th>
+          <th class="text-nowrap cursor-pointer " (click)="setSort('date')">
+            Date<i class="ion text-muted ml-2" *ngIf="sortBy=='date'" [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+          </th>
+          <th class="text-nowrap cursor-pointer " (click)="setSort('customer')">
+            Customer<i class="ion text-muted ml-2" *ngIf="sortBy=='customer'" [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+          </th>
+          <th class="text-nowrap cursor-pointer " (click)="setSort('totalprice')">
+            Total Price<i class="ion text-muted ml-2" *ngIf="sortBy=='totalprice'" [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+            </th>
+          <th class="text-nowrap cursor-pointer " (click)="setSort('status')">
+            Status<i class="ion text-muted ml-2" *ngIf="sortBy=='status'" [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+          </th>
+          <th class="text-nowrap cursor-pointer text-center order-table-header">
+            Action
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders">
+          <td class="align-middle py-2">
+            <a href="javascript:void(0)" class="media-body text-dark d-block order-id">#{{order.id}}</a>
+          </td>
+          <td class="align-middle py-2">{{order.updated_at.split('T')[0]}}</td>
+          <td class="align-middle py-2">{{order.customer_info.email}}</td>
+          <td class="align-middle py-2">${{order.total_price}}</td>
+          <td class="align-middle py-2">
+              <div class="card-body">
+                <span class="badge badge-outline-{{order.status_type}}">{{order.status}}</span>
+              </div>
+          </td>
+          <td class="text-nowrap align-middle py-2">
+            <a href="javascript:void(0)" class="btn btn-success btn-xs icon-btn md-btn-flat" ngbTooltip="View"
+            (click)="view(createModal, order, { windowClass: 'modal-default modal-lg animate' })"><i class="ion ion-ios-eye"></i>
+            </a>&nbsp;
+            <a routerLink="/store/orders/{{order.id}}/edit" class="btn btn-info btn-xs icon-btn md-btn-flat mr-1" ngbTooltip="Edit">
+              <span class="ion ion-md-create"></span>
+            </a>&nbsp;
+            <a href="javascript:void(0)" class="btn btn-danger btn-xs icon-btn md-btn-flat" ngbTooltip="Delete"
+            (click)="delete(deleteModal, order.id, { windowClass: 'modal-default modal-lg animate' })"><i class="ion ion-md-trash"></i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- / Table -->
+
+  <!-- Pagination -->
+  <div class="card-body py-0">
+
+    <div class="row">
+      <div class="col-sm text-sm-left text-center pt-3">
+        <span class="text-muted" *ngIf="totalItems">Page {{ currentPage }} of {{ totalPages }}</span>
+      </div>
+      <div class="col-sm pt-3">
+        <ngb-pagination
+          [collectionSize]="totalItems"
+          [pageSize]="perPage"
+          [(page)]="currentPage"
+          (pageChange)="update()"
+          size="sm"
+          class="d-flex justify-content-center justify-content-sm-end m-0"></ngb-pagination>
+      </div>
+    </div>
+
+  </div>
+  <!-- / Pagination -->
+</div>
+
+<input type="button" id="changedproduct" (click)="changedProduct(changedProducteModal, order, { windowClass: 'modal-default modal-lg animate' })" style="display: none">
+
+<ng-template #createModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5 class="modal-title">
+      #{{viewOrder.id}}
+      <br>
+      <span class="company-name" style="color: #1cbb84; font-size: 20px;">{{viewOrder.company_info.name}}</span>
+    </h5>
+    <div class="modal-header-status">
+      <div class="reload-icon header-item badge badge-outline-info"><i class="ion ion-md-sync d-block sync-icon"></i></div>
+      <div class="time-status header-item">1H 30min</div>
+      <div class="badge badge-pill badge-{{viewOrder.status_type}} header-item order-status">{{viewOrder.status}}</div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-2 text-muted mb-1">Full Name:</div>
+        <div class="col-10 mb-1">
+          <span class="text-big"><strong>{{viewOrder.customer_info.first_name}} {{viewOrder.customer_info.last_name}}</strong></span>
+        </div>
+        <div class="col-2 text-muted mb-1">Phone:</div>
+        <div class="col-10 mb-1">
+          <span class="text-big"><strong>{{viewOrder.customer_info.phone}}</strong></span>
+        </div>
+        <div class="col-2 text-muted mb-1">Address</div>
+        <div class="col-10 mb-1">
+          <span class="text-big"><strong>{{viewOrder.customer_info.address}}</strong></span>
+        </div>
+        <div class="col-2 text-muted mb-1">City:</div>
+        <div class="col-10 mb-1">
+          <span class="text-big"><strong>{{viewOrder.customer_info.city}}</strong></span>
+        </div>
+        <div class="col-2 text-muted mb-1">Country:</div>
+        <div class="col-10 mb-1">
+          <span class="text-big"><strong>{{viewOrder.customer_info.country}}</strong></span>
+        </div>
+      </div>
+    </div>
+    <hr class="my-4">
+    <div class="card" style="margin: 80px 0;">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered card-table">
+          <thead>
+            <tr>
+              <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
+                Product Name & Details<i class="ion text-muted ml-6" *ngIf="sortBy=='name'" [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+              </th>
+              <th class="text-nowrap cursor-pointer" (click)="setSort('price')">
+                Price<i class="ion text-muted ml-2" *ngIf="sortBy=='price'" [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+              </th>
+              <th class="text-nowrap cursor-pointer" (click)="setSort('quantity')">
+                Quantity<i class="ion text-muted ml-2" *ngIf="sortBy=='quantity'" [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+              </th>
+              <th class="text-nowrap cursor-pointer" (click)="setSort('total')">
+                Total<i class="ion text-muted ml-2" *ngIf="sortBy=='total'" [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let amount of viewOrder.amounts; let i = index">
+              <td class="align-middle py-2" style="min-width: 300px">
+                <div class="media align-items-center">
+                  <img class="d-block ui-w-40 img-thumbnail img-responsive"
+                    [src]="(viewOrder.products_info[i].image ? base_url + viewOrder.products_info[i].image : 'assets/img/avatars/noimage.png')"
+                    alt="">
+                  <div class="media-body flex-basis-auto pl-3">
+                    <div>{{viewOrder.products_info[i].product.name}}</div>
+                    <div class="text-muted small" *ngFor="let variation_type of viewOrder.products_info[i].product.variation_type; let j = index">
+                      <ng-container *ngIf="variation_type.type == 'color' || variation_type.type == 'Color'; else other_variation">
+                          <span class="theme-settings-theme-colors d-flex">
+                            <span>{{variation_type.type}}:</span>
+                            <span>&nbsp;</span>
+                            <span class="variation-color largeBorder_white" [ngStyle]="{'background-color':viewOrder.products_info[i].title.split('/')[j]}"></span>
+                          </span>
+                      </ng-container>
+                      <ng-template #other_variation>
+                        <ng-container *ngIf="variation_type.type == 'self_product'; else exist_variation">
+                        </ng-container>
+                        <ng-template #exist_variation>
+                          {{variation_type.type}}: {{viewOrder.products_info[i].title.split('/')[j]}}
+                        </ng-template>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="align-middle py-2">${{viewOrder.products_info[i].price}}</td>
+              <td class="align-middle py-2">{{amount}}</td>
+              <td class="align-middle py-2">${{+viewOrder.products_info[i].price * +amount}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr class="my-4">
+    <div class="card-body">
+      <div class="align-items-right" style="float: right; margin-right: -20px;">
+        <div class="ml-3">
+          <div class="text-muted small" style="float: right;">Total Price</div>
+          <div class="text-large"><strong>${{viewOrder.total_price}}</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer order-view-footer">
+    <button type="button" class="btn btn-default" style="float: right" (click)="closeModal()">close</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Delete order</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="dateOfBirth">Do you really want to delete this order?</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" style="float: right; margin-left: 5px" (click)="submit()">Delete</button>
+    <button type="button" class="btn btn-default" style="float: right" (click)="closeModal()">close</button>
+  </div>
+</ng-template>
+
+<ng-template #changedProducteModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Warning</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="dateOfBirth">Product for this order has been deleted or changed!</label>
+        <label for="dateOfBirth">Please delete this order and create new one!</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" style="float: right" (click)="closeModal()">close</button>
+  </div>
+</ng-template>
